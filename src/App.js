@@ -10,6 +10,8 @@ import { MuiThemeProvider, CssBaseline } from "@material-ui/core";
 import GlobalStyles from "./GlobalStyles";
 import DateTimeForm from "./DateTimeForm";
 import FinalResultsForm from "./FinalResultsForm";
+import Step1Form from "./Step1Form";
+import Step2Form from "./Step2Form";
 
 const getPathId = () => {
   let urlElements = window.location.pathname.split("/");
@@ -66,9 +68,11 @@ function App() {
         <CssBaseline />
         <GlobalStyles />
         <div className="App">
-          {!state.booking && <WelcomeForm />}
+          {!state.step1Done && <Step1Form/>}
+          {state.step1Done && !state.step2Done && <Step2Form/>}
+          {/* {!state.booking && <WelcomeForm />}
           {state.booking && !state.finished && <DateTimeForm />}
-          {state.booking && state.finished && <FinalResultsForm />}
+          {state.booking && state.finished && <FinalResultsForm />} */}
         </div>
       </MuiThemeProvider>
     </GlobalState.Provider>

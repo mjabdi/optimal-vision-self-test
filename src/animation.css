@@ -1,0 +1,9 @@
+.progress-animated {
+    animation: progress-bar-stripes 30s linear infinite;
+}
+
+
+@keyframes progress-bar-stripes {
+    from { background-position: 500px 0; }
+    to { background-position: 0 0; }
+  }
