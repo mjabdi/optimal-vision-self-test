@@ -219,6 +219,14 @@ export default function Step1Form() {
   
   const [saving, setSaving] = React.useState(false);
 
+  const itemRefs = [
+    React.useRef(null),
+    React.useRef(null),
+    React.useRef(null),
+    React.useRef(null),
+    React.useRef(null)
+  ] 
+
 
   const getValueof = (title) =>
   {
@@ -246,7 +254,13 @@ export default function Step1Form() {
       return
     }
 
-    setState(state => ({...state, step1Done: true, questionAnswers: questionAnswers}))
+    const questionArray = []
+    questionAnswers.forEach((value, key) => {
+      questionArray.push({question: key, answer: value})
+    })
+
+    console.log(questionArray)
+    setState(state => ({...state, step1Done: true, questionAnswers: questionArray}))
   }
 
   const validateData = () =>
@@ -336,12 +350,12 @@ export default function Step1Form() {
             alignItems="baseline"
             style={{ marginTop: "10px" }}
           > 
-            {questionArray.map(item => (
-              <Grid item xs={12} md={6}>
+            {questionArray.map((item,index) => (
+              <Grid item xs={12} md={6} ref={itemRefs[index]}>
                 <QuestionBox
                   questions={item.questions}
                   title={item.title}
-                  valueChanged={(value) => setValueof(item.title, value)}
+                  valueChanged={(value) => {setValueof(item.title, value); if (index < 4) itemRefs[index + 1].current.scrollIntoView({ behavior: 'smooth', block: 'start' })  }}
                   error={getErrorof(item.title)}
                   value={getValueof(item.title)}
                 />

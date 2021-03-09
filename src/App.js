@@ -70,9 +70,9 @@ function App() {
         <div className="App">
           {!state.step1Done && <Step1Form/>}
           {state.step1Done && !state.step2Done && <Step2Form/>}
-          {/* {!state.booking && <WelcomeForm />}
-          {state.booking && !state.finished && <DateTimeForm />}
-          {state.booking && state.finished && <FinalResultsForm />} */}
+          {state.step1Done && state.step2Done && state.booking && !state.finished && <DateTimeForm/>}
+
+          {state.step1Done && state.step2Done && state.booking && state.finished && <FinalResultsForm />}
         </div>
       </MuiThemeProvider>
     </GlobalState.Provider>

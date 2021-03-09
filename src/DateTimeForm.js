@@ -38,6 +38,8 @@ import faq from "./FAQ";
 import gynaeImage from "./images/gynae-clinic.png";
 import BookService from "./services/BookService";
 
+import "./Badge.css"
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -66,8 +68,8 @@ const useStyles = makeStyles((theme) => ({
     width: "auto",
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: 600,
+    [theme.breakpoints.up(1200 + theme.spacing(2) * 2)]: {
+      width: 1200,
       marginLeft: "auto",
       marginRight: "auto",
     },
@@ -77,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(0),
     marginBottom: theme.spacing(3),
     padding: theme.spacing(1),
-    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
+    [theme.breakpoints.up(1200 + theme.spacing(3) * 2)]: {
       marginTop: theme.spacing(0),
       marginBottom: theme.spacing(2),
       padding: theme.spacing(5),
@@ -166,24 +168,28 @@ const useStyles = makeStyles((theme) => ({
   },
 
   pageTitle: {
-    color: theme.palette.secondary.main,
-    fontSize: "1.6rem",
+    color: "#38ba00", //theme.palette.secondary.main,
+    fontSize: "2rem",
     fontWeight: "600",
+    paddingTop: "20px",
   },
 
   BookButton: {
-    width: "100%",
+    width: "400px",
     height: "50px",
     borderRadius: "30px",
-    fontSize: "1.3rem",
+    fontSize: "1.1rem",
     color: "#fff",
     fontWeight: "600",
     backgroundColor: theme.palette.secondary.main,
     cursor: "pointer",
     padding: "10px 20px",
     marginTop: "40px",
+    transition: "all 0.3s ease",
+    "&:hover": {
+      backgroundColor: theme.palette.primary.main,
+    },
   },
-
   backdrop: {
     zIndex: 999,
     color: "#fff",
@@ -193,23 +199,23 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     padding: "10px",
     borderRadius: "30px",
-    color : theme.palette.primary.main,
+    color: theme.palette.primary.main,
     borderColor: theme.palette.primary.main,
     border: "1px solid",
     fontWeight: "500",
     cursor: "pointer",
-    transition : "all 0.3s ease",
-    "&:hover" :{
-      backgroundColor : theme.palette.primary.main,
-      color: "#fff"
-    }
+    transition: "all 0.3s ease",
+    "&:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "#fff",
+    },
   },
 
   daySelected: {
     width: "100%",
     padding: "10px",
     borderRadius: "30px",
-    backgroundColor : theme.palette.primary.main,
+    backgroundColor: theme.palette.primary.main,
     color: "#fff",
     borderColor: theme.palette.primary.main,
     border: "1px solid",
@@ -217,29 +223,28 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
   },
 
-  
   time: {
     width: "100%",
     padding: "10px",
     borderRadius: "4px",
-    color : "#777",
+    color: "#777",
     borderColor: "#777",
     border: "1px solid",
     fontWeight: "500",
     cursor: "pointer",
-    transition : "all 0.3s ease",
-    "&:hover" :{
-      backgroundColor : theme.palette.primary.main,
+    transition: "all 0.3s ease",
+    "&:hover": {
+      backgroundColor: theme.palette.primary.main,
       borderColor: theme.palette.primary.main,
-      color: "#fff"
-    }
+      color: "#fff",
+    },
   },
 
   timeSelected: {
     width: "100%",
     padding: "10px",
     borderRadius: "4px",
-    backgroundColor : theme.palette.primary.main,
+    backgroundColor: theme.palette.primary.main,
     color: "#fff",
     borderColor: theme.palette.primary.main,
     border: "1px solid",
@@ -247,25 +252,28 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
   },
 
-
-
   dayDisabled: {
     width: "100%",
     padding: "10px",
     borderRadius: "30px",
-    backgroundColor : "#ddd",
+    backgroundColor: "#ddd",
     color: "#fff",
     fontWeight: "500",
     cursor: "not-allowed",
   },
 
+  TextSecondary: {
+    color: theme.palette.secondary.main,
+  },
 
+  TextPrimary: {
+    color: theme.palette.primary.main,
+  },
 }));
 
 export default function DateTimeForm() {
   const [state, setState] = React.useContext(GlobalState);
   const classes = useStyles();
-
 
   //// ** Dialog
 
@@ -274,44 +282,42 @@ export default function DateTimeForm() {
   }, []);
 
   const [saving, setSaving] = React.useState(false);
-  const [selectedDate, setSelectedDate] = React.useState(null)
+  const [selectedDate, setSelectedDate] = React.useState(null);
 
-  const [selectedTime, setSelectedTime] = React.useState(null)
+  const [selectedTime, setSelectedTime] = React.useState(null);
 
   const dayClicked = (date, dayLabel) => {
-    setSelectedDate(date)
-    setSelectedTime(null)
-    setState(state => ({...state, selectedDayLabel: dayLabel }))
-  }
+    setSelectedDate(date);
+    setSelectedTime(null);
+    setState((state) => ({ ...state, selectedDayLabel: dayLabel }));
+  };
 
   const timeClicked = (time) => {
-    setSelectedTime(time)
-    setState(state => ({...state, selectedTime: time }))
-  }
+    setSelectedTime(time);
+    setState((state) => ({ ...state, selectedTime: time }));
+  };
 
-  const submitClicked = async () =>
-  {
+  const submitClicked = async () => {
+    if (!selectedDate || !selectedTime) return;
 
-    if (!selectedDate || !selectedTime)
-      return
-    
-    setSaving(true)
+    setSaving(true);
 
     try {
-      const res = await BookService.setDateTime(state.booking._id, selectedDate, selectedTime)
-      setSaving(false)
-      if (res.data.status === "OK")
-      {
-        setState(state => ({...state, finished: true, }))
+      const res = await BookService.setDateTime(
+        state.booking._id,
+        selectedDate,
+        selectedTime
+      );
+      setSaving(false);
+      if (res.data.status === "OK") {
+        setState((state) => ({ ...state, finished: true }));
       }
+    } catch (err) {
+      console.error(err);
+      setSaving(false);
     }
-    catch(err)
-    {
-      console.error(err)
-      setSaving(false)
-    }
-  }
-  
+  };
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -325,41 +331,75 @@ export default function DateTimeForm() {
               marginBottom: "20px",
             }}
           >
-            <span className={classes.pageTitle}> Thank You!</span>
+            <img
+              src="https://www.optimalvision.co.uk/public/design/images/logo.png"
+              alt="logo"
+            />
           </div>
 
-          <div
-            style={{
-              marginTop: "20px",
-              color: "#555",
-              fontSize: "1rem",
-              width: "100%",
-              textAlign: "center",
-              lineHeight: "1.5rem",
-            }}
-          >
-            Your information has been submitted successfully.
+          <div className={classes.pageTitle}> Congratulations!</div>
+
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <div
+              style={{
+                marginTop: "20px",
+                fontSize: "1.5rem",
+                width: "100%",
+                textAlign: "center",
+                lineHeight: "2.5rem",
+                maxWidth: "700px",
+                fontWeight: "500",
+              }}
+              className={classes.TextSecondary}
+            >
+              Based on your answers, you are a possible candidate for Laser Eye
+              Surgery (a free consultation is necessary to determine accuracy of
+              these results).
+            </div>
           </div>
 
-          <div
-            style={{
-              marginTop: "10px",
-              color: "#555",
-              fontSize: "1rem",
-              width: "100%",
-              textAlign: "center",
-              lineHeight: "1.8rem",
-            }}
-          >
-            In order to help us to <strong>call you back</strong> at a time you
-            prefer, please choose a time below:
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <div
+              style={{
+                marginTop: "10px",
+                fontSize: "1.2rem",
+                width: "100%",
+                textAlign: "center",
+                lineHeight: "1.8rem",
+                borderBottom: "5px solid #03b5f2",
+                maxWidth: "800px",
+                fontWeight: "500",
+              }}
+              className={classes.TextSecondary}
+            >
+              In order to help us to{" "}
+              <span
+                style={{ fontWeight: "700" }}
+                className={classes.TextPrimary}
+              >
+                call you back
+              </span>{" "}
+              at a time you prefer, please choose a time below:
+            </div>
           </div>
 
           {state.timeData && state.timeData.status === "OK" && (
             <React.Fragment>
-              <Grid container spacing={2} style={{ marginTop: "20px" }}>
+              <Grid
+                container
+                alignItems="center"
+                justify="center"
+                spacing={2}
+                style={{ marginTop: "20px" }}
+              >
                 {state.timeData.days.map((day) => (
-                  <Grid item xs={12} sm={6}>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    hidden={!day.available}
+                    style={{ maxWidth: "400px" }}
+                  >
                     <div
                       className={
                         day.available
@@ -369,7 +409,9 @@ export default function DateTimeForm() {
                           : classes.dayDisabled
                       }
                       onClick={() =>
-                        day.available ? dayClicked(day.date, day.dayLabel) : null
+                        day.available
+                          ? dayClicked(day.date, day.dayLabel)
+                          : null
                       }
                     >
                       {day.dayLabel}
@@ -380,13 +422,34 @@ export default function DateTimeForm() {
 
               {selectedDate && (
                 <React.Fragment>
-                  <div  style={{ marginTop: "20px", fontWeight:"500", textAlign:"center" }}>
+                  <div
+                    style={{
+                      marginTop: "20px",
+                      fontWeight: "500",
+                      textAlign: "center",
+                    }}
+                  >
                     Please choose your preferred time :
                   </div>
-                  <Grid container spacing={2} style={{ marginTop: "10px" }}>
-                    {state.timeData.defaultTimes.map((time,index) => (
-                      <Grid item xs={12} sm={6} hidden={selectedDate === state.timeData.days[0].date  && index < state.timeData.firstTimeIndex}>
+                  <Grid
+                    container
+                    spacing={2}
+                    alignItems="center"
+                    justify="center"
+                    style={{ marginTop: "10px" }}
+                  >
+                    {state.timeData.defaultTimes.map((time, index) => (
+                      <Grid
+                        item
+                        // xs={12}
+                        // sm={6}
+                        hidden={
+                          selectedDate === state.timeData.days[0].date &&
+                          index < state.timeData.firstTimeIndex
+                        }
+                      >
                         <div
+                          style={{ maxWidth: "200px" }}
                           className={
                             time === selectedTime
                               ? classes.timeSelected
@@ -404,8 +467,112 @@ export default function DateTimeForm() {
             </React.Fragment>
           )}
 
-          <div className={classes.BookButton} onClick={() => submitClicked()}>Submit</div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "30px",
+            }}
+          >
+            <div class="discount-label red">
+              {" "}
+              <span>NOW Up-to £1000 off * </span>{" "}
+            </div>
+          </div>
 
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <div
+              className={classes.TextPrimary}
+              style={{
+                marginTop: "15px",
+                fontSize: "1.5rem",
+                width: "100%",
+                textAlign: "center",
+                lineHeight: "2.5rem",
+                maxWidth: "700px",
+                fontWeight: "600",
+              }}
+            >
+              Thanks, we'll be in touch soon.
+            </div>
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <div
+              style={{
+                marginTop: "15px",
+                fontSize: "1.1rem",
+                width: "100%",
+                textAlign: "center",
+                lineHeight: "2.5rem",
+                maxWidth: "700px",
+                fontWeight: "500",
+              }}
+            >
+              Keep a look out for this number:
+            </div>
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <div
+              className={classes.TextPrimary}
+              style={{
+                marginTop: "15px",
+                fontSize: "2rem",
+                width: "100%",
+                textAlign: "center",
+                lineHeight: "2.5rem",
+                maxWidth: "700px",
+                fontWeight: "600",
+              }}
+            >
+              020 7183 3725
+            </div>
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <div
+              style={{
+                marginTop: "15px",
+                fontSize: "1.1rem",
+                width: "100%",
+                textAlign: "center",
+                lineHeight: "2.5rem",
+                maxWidth: "700px",
+                fontWeight: "400",
+              }}
+            >
+              One of our team will be getting in touch.
+            </div>
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <div
+              style={{
+                marginTop: "0px",
+                fontSize: "1.1rem",
+                width: "100%",
+                textAlign: "center",
+                lineHeight: "2.5rem",
+                maxWidth: "700px",
+                fontWeight: "400",
+              }}
+            >
+              London's most trusted provider
+            </div>
+          </div>
+
+          <div
+            style={{ display: "flex", width: "100%", justifyContent: "center" }}
+          >
+            <div className={classes.BookButton} onClick={() => submitClicked()}>
+              Submit
+            </div>
+          </div>
+
+          <div
+            style={{ display: "flex", width: "100%", justifyContent: "center" }}
+          >
           <div
             style={{
               marginTop: "20px",
@@ -413,6 +580,7 @@ export default function DateTimeForm() {
               fontSize: "0.8rem",
               width: "100%",
               textAlign: "left",
+              maxWidth:"700px"
             }}
           >
             We will never share your data with 3rd parties for marketing
@@ -425,6 +593,11 @@ export default function DateTimeForm() {
             >
               Privacy Policy
             </a>
+            <p style={{color:"#f25d00", fontWeight:"600", marginTop:"5px"}}>
+            * Your total surgery cost during this month
+            </p>
+          </div>
+
           </div>
 
           <Backdrop className={classes.backdrop} open={saving}>

@@ -66,8 +66,8 @@ const useStyles = makeStyles((theme) => ({
     width: "auto",
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: 600,
+    [theme.breakpoints.up(1200 + theme.spacing(2) * 2)]: {
+      width: 1200,
       marginLeft: "auto",
       marginRight: "auto",
     },
@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(0),
     marginBottom: theme.spacing(3),
     padding: theme.spacing(1),
-    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
+    [theme.breakpoints.up(1200 + theme.spacing(3) * 2)]: {
       marginTop: theme.spacing(0),
       marginBottom: theme.spacing(2),
       padding: theme.spacing(5),
@@ -280,13 +280,32 @@ export default function FinalResultsForm() {
       <CssBaseline />
       <main className={classes.layout}>
         <Paper className={classes.paper}>
-          <div
+
+
+        <div
             style={{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               marginBottom: "20px",
               marginTop: "20px",
+            }}
+          >
+                    <img
+                src="https://www.optimalvision.co.uk/public/design/images/logo.png"
+              alt="logo"
+            />
+          </div>
+
+
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: "50px",
+              marginTop: "80px",
             }}
           >
             <img src={thankyouImage} alt="Thank You"/>

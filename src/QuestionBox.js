@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const QuestionBox = ({ title, value, valueChanged, error, questions }) => {
+const QuestionBox = ({ title, value, valueChanged, error, questions, children }) => {
   const classes = useStyles();
 
 //   useEffect(() => {
@@ -88,6 +88,14 @@ const QuestionBox = ({ title, value, valueChanged, error, questions }) => {
             * This field is required.
           </div>
         )}
+
+        <div style={{padding:"0px 30px", marginBottom:"50px"}}>
+
+            {children}
+
+        </div>
+
+
       </div>
     </React.Fragment>
   );

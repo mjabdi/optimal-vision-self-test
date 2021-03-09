@@ -27,6 +27,8 @@ import {
   CircularProgress,
   FormControlLabel,
   Grid,
+  Radio,
+  RadioGroup,
   TextField,
 } from "@material-ui/core";
 
@@ -39,7 +41,7 @@ import gynaeImage from "./images/gynae-clinic.png";
 import BookService from "./services/BookService";
 import QuestionBox from "./QuestionBox";
 
-import './animation.css'
+import "./animation.css";
 
 function Copyright() {
   return (
@@ -186,31 +188,174 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px 20px",
     marginTop: "40px",
     transition: "all 0.3s ease",
-    "&:hover" : {
+    "&:hover": {
       backgroundColor: theme.palette.primary.main,
-    }
+    },
   },
 
   backdrop: {
     zIndex: 999,
     color: "#fff",
   },
+
+  TextSecondary: {
+    color: theme.palette.secondary.main,
+  },
+
+  TextPrimary: {
+    color: theme.palette.primary.main,
+  },
+
+  questionsBox: {
+    padding: "20px 10px 0px 10px",
+    textAlign: "left",
+    color: theme.palette.secondary.main,
+  },
 }));
 
+const questions = [
+  "No - I'm ready to come in!",
+  "Money - I'm not sure it's in my budget",
+  "Fear - I'm afraid of laser eye surgery",
+  "Questions - I still have some questions...",
+];
 
 export default function Step2Form() {
   const [state, setState] = React.useContext(GlobalState);
   const classes = useStyles();
 
-  const [openToLaser, setOpenToLaser] = React.useState('')
+  const [openToLaser, setOpenToLaser] = React.useState("");
+  const [openToLaserError, setOpenToLaserError] = React.useState(false);
+
+  const [stoppingReason, setStoppingReason] = React.useState("");
+  const [stoppingReasonError, setStoppingReasonError] = React.useState(false);
+
+  const stoppingReasonChanged = (event) => {
+    setStoppingReason(event.target.value);
+    setStoppingReasonError(false)
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  
-  const [saving, setSaving] = React.useState(false);
+  const [fullname, setFullname] = React.useState(state.fullname ?? "");
+  const [email, setEmail] = React.useState(state.email ?? "");
+  const [phone, setPhone] = React.useState(state.phone ?? "");
 
+  const fullnameChanged = (event) => {
+    setFullname(event.target.value);
+    setState((state) => ({ ...state, fullname: event.target.value }));
+    if (event.target.value && event.target.value.trim().length > 0) {
+      setState((state) => ({ ...state, fullnameError: false }));
+    }
+  };
+
+  const emailChanged = (event) => {
+    setEmail(event.target.value);
+    setState((state) => ({ ...state, email: event.target.value }));
+    if (event.target.value && EmailValidator.validate(event.target.value)) {
+      setState((state) => ({ ...state, emailError: false }));
+    }
+  };
+
+  const phoneChanged = (event) => {
+    setPhone(event.target.value);
+    setState((state) => ({ ...state, phone: event.target.value }));
+    if (event.target.value && event.target.value.trim().length >= 6) {
+      setState((state) => ({ ...state, phoneError: false }));
+    }
+  };
+
+  const buttonClicked = async () =>
+  {
+    if (!ValidateData())
+      return
+
+      setSaving(true)
+
+      try {
+        const payload = {
+          fullname: fullname,
+          email: email,
+          phone: phone,
+          faceToFaceConsultation: false,
+          telephoneConsultation: false,
+          questions: state.questionAnswers
+        };
+        const res = await BookService.bookConsultation(payload);
+        setSaving(false);
+        if (res.data.status === "OK") {
+          setState((state) => ({ ...state, step2Done: true , booking: res.data.booking, timeData : res.data.timeData }));
+        }
+      } catch (err) {
+        console.error(err);
+        setSaving(false);
+      }
+  }
+
+  const ValidateData = () =>
+  {
+    let error = false
+
+    if (!openToLaser)
+    {
+      error = true
+      setOpenToLaserError(true)
+    }else{
+      if (openToLaser === "Yes")
+      {
+        if (!fullname || fullname.length < 1) {
+          setState((state) => ({ ...state, fullnameError: true }));
+          error = true;
+        }
+    
+        if (!email || !EmailValidator.validate(email)) {
+          setState((state) => ({ ...state, emailError: true }));
+          error = true;
+        }
+    
+        if (!phone || phone.length < 5) {
+          setState((state) => ({ ...state, phoneError: true }));
+          error = true;
+        }
+    
+      }else if (openToLaser === "No")
+      {
+        if (!stoppingReason)
+        {
+          error = true
+          setStoppingReasonError(true)
+        }
+        else
+        {
+          if (!fullname || fullname.length < 1) {
+            setState((state) => ({ ...state, fullnameError: true }));
+            error = true;
+          }
+      
+          if (!email || !EmailValidator.validate(email)) {
+            setState((state) => ({ ...state, emailError: true }));
+            error = true;
+          }
+      
+          if (!phone || phone.length < 5) {
+            setState((state) => ({ ...state, phoneError: true }));
+            error = true;
+          }
+      
+        }
+      }
+    }
+
+
+
+    return !error
+
+
+  }
+
+  const [saving, setSaving] = React.useState(false);
 
   return (
     <React.Fragment>
@@ -258,12 +403,12 @@ export default function Step2Form() {
                   backgroundColor: "#17a2b8",
                   fontSize: "0.75rem",
                   display: "flex",
-                  justifyContent:"flex-end",
+                  justifyContent: "flex-end",
                   borderTopLeftRadius: "20px",
                   borderBottomLeftRadius: "20px",
-                  backgroundImage: "linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent)",
-                  backgroundSize : "1rem 1rem"
-
+                  backgroundImage:
+                    "linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent)",
+                  backgroundSize: "1rem 1rem",
                 }}
                 className="progress-animated"
               >
@@ -273,7 +418,7 @@ export default function Step2Form() {
                     paddingLeft: "10px",
                     paddingRight: "10px",
                     fontWeight: "700",
-                    textAlign:"right",
+                    textAlign: "right",
                     color: "#013661",
                   }}
                 >
@@ -283,26 +428,238 @@ export default function Step2Form() {
             </div>
           </div>
 
-          <div style={{width:"100%", display:"flex", justifyContent:"center"}}>
-          <div style={{maxWidth:"720px"}}>
-            <QuestionBox
-                  questions={["Yes", "No"]}
-                  title="Would you be open to a FREE no-obligation laser eye surgery consultation (if it turns out you are a candidate)? *"
-                  valueChanged={(value) => setOpenToLaser(value)}
-                  value={openToLaser}
-                />                
-          </div>
-          </div>
-
-        
           <div
-            style={{ display: "flex", width: "100%", justifyContent: "center" }}
+            style={{ width: "100%", display: "flex", justifyContent: "center" }}
           >
-            <div className={classes.BookButton}>
-              SHOW MY RESULTS!
+            <div style={{ maxWidth: "720px" }}>
+              <QuestionBox
+                questions={["Yes", "No"]}
+                title="Would you be open to a FREE no-obligation laser eye surgery consultation (if it turns out you are a candidate)? *"
+                valueChanged={(value) => {
+                  setOpenToLaser(value);
+                  setOpenToLaserError(false);
+                }}
+                value={openToLaser}
+                error={openToLaserError}
+              >
+                {openToLaser === "No" && (
+                  <div
+                    className={classes.TextSecondary}
+                    style={{
+                      textAlign: "left",
+                      fontSize: "0.95rem",
+                      lineHeight: "1.5rem",
+                      fontWeight: "500",
+                    }}
+                  >
+                    <div>
+                      Is There Anything Stopping You From Coming In For A
+                      Consult To See If You're A True Laser Eye Surgery
+                      Candidate? *
+                    </div>
+                    <div
+                      className={classes.questionsBox}
+                      style={
+                        stoppingReasonError ? { border: "2px solid red" } : {}
+                      }
+                    >
+                      <RadioGroup
+                        aria-label="questions"
+                        name={`question-box`}
+                        value={stoppingReason}
+                        onChange={stoppingReasonChanged}
+                      >
+                        {questions &&
+                          questions.map((question) => (
+                            <FormControlLabel
+                              value={question}
+                              control={<Radio color="primary" />}
+                              label={question}
+                            />
+                          ))}
+                      </RadioGroup>
+
+                      {stoppingReasonError && (
+                        <div
+                          style={{
+                            color: "red",
+                            textAlign: "left",
+                            marginBottom: "10px",
+                            fontWeight: "500",
+                            paddingLeft: "10px",
+                          }}
+                        >
+                          * This field is required.
+                        </div>
+                      )}
+                    </div>
+
+                    <div
+                      style={{ paddingTop: "20px" }}
+                      className={classes.TextPrimary}
+                    >
+                      {stoppingReason === questions[0] && (
+                        <div>
+                          <p>
+                            Please fill out the form below to receive a{" "}
+                            <span style={{ fontWeight: "700" }}>callback</span>.
+                          </p>
+                        </div>
+                      )}
+                      {stoppingReason === questions[1] && (
+                        <div>
+                          <p>
+                            The cost of laser eye surgery depends on the type of
+                            treatment you're having and your prescription
+                            requirements, but the range of pricing and finance
+                            options at Optical Express make it an affordable
+                            solution for all patients.
+                          </p>
+                          <p>
+                            <a
+                              href="https://www.optimalvision.co.uk/laser-eye-surgery-costs"
+                              target="_blank"
+                            >
+                              Read more about pricing
+                            </a>
+                          </p>
+                          <p>
+                            Our advisers are available to discuss pricing in
+                            more detail. Please fill out the form below to
+                            receive a{" "}
+                            <span style={{ fontWeight: "700" }}>callback</span>.
+                          </p>
+                        </div>
+                      )}
+                      {stoppingReason === questions[2] && (
+                        <div>
+                          <p>
+                            Our advisers are available to discuss your fears and
+                            concerns in more detail. Please fill out the form
+                            below to receive a{" "}
+                            <span style={{ fontWeight: "700" }}>callback</span>.
+                          </p>
+                        </div>
+                      )}
+
+                      {stoppingReason === questions[3] && (
+                        <div>
+                          <p>
+                            Our advisers are available to discuss any questions
+                            you may have. Please fill out the form below to
+                            receive a{" "}
+                            <span style={{ fontWeight: "700" }}>callback</span>.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {openToLaser === "Yes" && (
+                  <div
+                    className={classes.TextSecondary}
+                    style={{
+                      textAlign: "left",
+                      fontSize: "0.95rem",
+                      lineHeight: "1.5rem",
+                      fontWeight: "500",
+                    }}
+                  >
+                    <div
+                      style={{ paddingTop: "20px" }}
+                      className={classes.TextPrimary}
+                    >
+                      <p>
+                        Please fill out the form below to receive a{" "}
+                        <span style={{ fontWeight: "700" }}>callback</span>.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {(openToLaser === "Yes" || stoppingReason) && (
+                  <div>
+                    <Grid
+                      container
+                      spacing={3}
+                      alignItems="baseline"
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Grid item xs={12}>
+                        <TextField
+                          error={state.fullnameError ? true : false}
+                          required
+                          id="full Name"
+                          label="Full Name"
+                          fullWidth
+                          autoComplete="name"
+                          value={fullname}
+                          onChange={fullnameChanged}
+                        />
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <TextField
+                          error={state.phoneError ? true : false}
+                          required
+                          id="phone"
+                          label="Contact Phone Number"
+                          fullWidth
+                          autoComplete="tel"
+                          value={phone}
+                          onChange={phoneChanged}
+                        />
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <TextField
+                          error={state.emailError ? true : false}
+                          required
+                          id="email"
+                          label="Email Address"
+                          fullWidth
+                          autoComplete="email"
+                          type="email"
+                          value={email}
+                          onChange={emailChanged}
+                        />
+                      </Grid>
+                    </Grid>
+                    <div
+                      style={{
+                        marginTop: "50px",
+                        color: "#999",
+                        fontSize: "0.8rem",
+                        width: "100%",
+                        textAlign: "left",
+                      }}
+                    >
+                      * We will never share your data with 3rd parties for
+                      marketing purposes. For more information about how Optimal
+                      Vision uses, shares and protects your personal data, see
+                      our
+                      <a
+                        href="https://www.optimalvision.co.uk/privacy-policy"
+                        target="_blank"
+                        style={{ color: "#777", marginLeft: "5px" }}
+                      >
+                        Privacy Policy
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </QuestionBox>
             </div>
           </div>
 
+          <div
+            style={{ display: "flex", width: "100%", justifyContent: "center" }}
+          >
+            <div className={classes.BookButton} onClick={buttonClicked}>
+              SHOW MY RESULTS!
+            </div>
+          </div>
 
           <Backdrop className={classes.backdrop} open={saving}>
             <CircularProgress color="inherit" />

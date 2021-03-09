@@ -255,8 +255,8 @@ export default function WelcomeForm() {
         fullname: fullname,
         email: email,
         phone: phone,
-        faceToFaceConsultation: faceChecked,
-        telephoneConsultation: telChecked,
+        faceToFaceConsultation: false,
+        telephoneConsultation: false,
       };
       const res = await BookService.bookConsultation(payload);
       setSaving(false);
