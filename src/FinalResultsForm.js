@@ -10,6 +10,9 @@ import Typography from "@material-ui/core/Typography";
 import GlobalState from "./GlobalState";
 import * as EmailValidator from "email-validator";
 
+import {Helmet} from "react-helmet";
+
+
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -278,6 +281,11 @@ export default function FinalResultsForm() {
   return (
     <React.Fragment>
       <CssBaseline />
+
+      <Helmet>
+        <script>gtag_report_conversion ();</script>
+      </Helmet>
+
       <main className={classes.layout}>
         <Paper className={classes.paper}>
 
