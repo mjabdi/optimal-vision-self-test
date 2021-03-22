@@ -281,7 +281,8 @@ export default function Step2Form() {
           phone: phone,
           faceToFaceConsultation: false,
           telephoneConsultation: false,
-          questions: state.questionAnswers
+          questions: state.questionAnswers,
+          referrer: state.referrer,
         };
         const res = await BookService.bookConsultation(payload);
         setSaving(false);
