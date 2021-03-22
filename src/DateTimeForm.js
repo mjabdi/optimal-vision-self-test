@@ -199,58 +199,62 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     padding: "10px",
     borderRadius: "30px",
-    color: theme.palette.primary.main,
+    color : theme.palette.primary.main,
     borderColor: theme.palette.primary.main,
-    border: "1px solid",
-    fontWeight: "500",
+    border: "3px solid",
+    fontWeight: "700",
+    fontSize:"1.5rem",
     cursor: "pointer",
-    transition: "all 0.3s ease",
-    "&:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "#fff",
-    },
+    transition : "all 0.3s ease",
+    "&:hover" :{
+      backgroundColor : theme.palette.primary.main,
+      color: "#fff"
+    }
   },
 
   daySelected: {
     width: "100%",
     padding: "10px",
     borderRadius: "30px",
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor : theme.palette.primary.main,
     color: "#fff",
     borderColor: theme.palette.primary.main,
-    border: "1px solid",
-    fontWeight: "500",
+    border: "3px solid",
+    fontWeight: "700",
+    fontSize:"1.5rem",
     cursor: "pointer",
   },
 
+  
   time: {
     width: "100%",
     padding: "10px",
     borderRadius: "4px",
-    color: "#777",
-    borderColor: "#777",
-    border: "1px solid",
-    fontWeight: "500",
+    color : theme.palette.secondary.main,
+    borderColor: theme.palette.secondary.main,
+    border: "2px solid",
+    fontWeight: "700",
     cursor: "pointer",
-    transition: "all 0.3s ease",
-    "&:hover": {
-      backgroundColor: theme.palette.primary.main,
-      borderColor: theme.palette.primary.main,
-      color: "#fff",
-    },
+    transition : "all 0.3s ease",
+    "&:hover" :{
+      backgroundColor : theme.palette.secondary.main,
+      borderColor: theme.palette.secondary.main,
+      color: "#fff"
+    }
   },
 
   timeSelected: {
     width: "100%",
     padding: "10px",
     borderRadius: "4px",
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor :theme.palette.secondary.main,
     color: "#fff",
-    borderColor: theme.palette.primary.main,
-    border: "1px solid",
-    fontWeight: "500",
+    borderColor: theme.palette.secondary.main,
+    border: "2px solid",
+    fontWeight: "700",
     cursor: "pointer",
   },
+
 
   dayDisabled: {
     width: "100%",
@@ -343,14 +347,15 @@ export default function DateTimeForm() {
             <div
               style={{
                 marginTop: "20px",
-                fontSize: "1.5rem",
+                fontSize: "1.2rem",
                 width: "100%",
                 textAlign: "center",
                 lineHeight: "2.5rem",
                 maxWidth: "700px",
                 fontWeight: "500",
+                color:"#777"
               }}
-              className={classes.TextSecondary}
+              // className={classes.TextSecondary}
             >
               Based on your answers, you are a possible candidate for Laser Eye
               Surgery (a free consultation is necessary to determine accuracy of
@@ -370,7 +375,7 @@ export default function DateTimeForm() {
                 maxWidth: "800px",
                 fontWeight: "500",
               }}
-              className={classes.TextSecondary}
+              // className={classes.TextSecondary}
             >
               In order to help us to{" "}
               <span
@@ -482,7 +487,7 @@ export default function DateTimeForm() {
 
           <div style={{ display: "flex", justifyContent: "center" }}>
             <div
-              className={classes.TextPrimary}
+              // className={classes.TextPrimary}
               style={{
                 marginTop: "15px",
                 fontSize: "1.5rem",
@@ -491,6 +496,7 @@ export default function DateTimeForm() {
                 lineHeight: "2.5rem",
                 maxWidth: "700px",
                 fontWeight: "600",
+                color:"#777"
               }}
             >
               Thanks, we'll be in touch soon.

@@ -224,7 +224,7 @@ export default function Step2Form() {
   const [state, setState] = React.useContext(GlobalState);
   const classes = useStyles();
 
-  const [openToLaser, setOpenToLaser] = React.useState("");
+  const [openToLaser, setOpenToLaser] = React.useState("Yes");
   const [openToLaserError, setOpenToLaserError] = React.useState(false);
 
   const [stoppingReason, setStoppingReason] = React.useState("");
